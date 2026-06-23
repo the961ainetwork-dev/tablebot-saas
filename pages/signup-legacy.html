@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up — TableBot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--paper:#fff;--ink:#0a0a0a;--grey-1:#e8e6e1;--grey-2:#c9c6bd;--grey-3:#76746c;--red:#ff0000;--sans:'Inter',Arial,sans-serif;--mono:'JetBrains Mono',monospace}
+    body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+    a{color:inherit;text-decoration:none}
+    @media(max-width:860px){body{grid-template-columns:1fr}}
+    .id-panel{background:var(--ink);color:var(--paper);padding:48px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+    @media(max-width:860px){.id-panel{display:none}}
+    .id-panel::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg, transparent 0px, transparent 2px, rgba(255,0,0,.05) 2px, rgba(255,0,0,.05) 3px)}
+    .id-mark{font-weight:900;font-size:22px;text-transform:uppercase;letter-spacing:-.5px;position:relative;z-index:1}
+    .id-mark .dot{color:var(--red)}
+    .id-quote{font-size:clamp(26px,2.8vw,38px);font-weight:900;line-height:1.1;letter-spacing:-1.3px;text-transform:uppercase;max-width:400px;position:relative;z-index:1}
+    .id-quote span{color:var(--red)}
+    .id-trial{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--grey-2);border-top:1px solid #2a2a2a;padding-top:16px;position:relative;z-index:1;display:flex;flex-direction:column;gap:6px}
+
+    .form-panel{display:flex;align-items:center;justify-content:center;padding:48px;overflow-y:auto}
+    .form-box{width:100%;max-width:420px;padding:24px 0}
+    .form-eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--grey-3);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+    .form-eyebrow::before{content:"";width:20px;height:1px;background:var(--red)}
+    h2{font-size:30px;font-weight:900;letter-spacing:-1.2px;text-transform:uppercase;margin-bottom:8px}
+    .subtitle{font-family:var(--mono);font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:28px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .field{margin-bottom:18px}
+    label{display:block;font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--grey-3);margin-bottom:7px;text-transform:uppercase;letter-spacing:1px}
+    input,select{width:100%;padding:12px 0;border:none;border-bottom:1px solid var(--ink);font-size:14px;font-family:var(--sans);color:var(--ink);background:transparent;border-radius:0;appearance:none}
+    input:focus,select:focus{outline:none;border-bottom:2px solid var(--red);padding-bottom:11px}
+    .btn{width:100%;padding:16px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);font-family:var(--mono);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-top:8px;transition:all .15s}
+    .btn:hover{background:var(--red);border-color:var(--red)}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .footer-link{text-align:center;margin-top:24px;font-family:var(--mono);font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px}
+    .footer-link a{color:var(--ink);font-weight:700;border-bottom:1px solid var(--ink)}
+    .footer-link a:hover{color:var(--red);border-color:var(--red)}
+    .error{border:1px solid var(--red);color:var(--red);padding:12px 14px;font-size:12px;font-family:var(--mono);margin-bottom:20px;display:none;text-transform:uppercase;letter-spacing:.5px}
+    .error.show{display:block}
+    .spinner{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+
+<div class="id-panel">
+  <div class="id-mark">Table<span class="dot">·</span>Bot</div>
+  <div class="id-quote">Reliable as<br/>swiss<br/>watch<span>making</span>.</div>
+  <div class="id-trial">
+    <div>— 14-day free trial</div>
+    <div>— No credit card required</div>
+    <div>— Cancel anytime</div>
+  </div>
+</div>
+
+<div class="form-panel">
+  <div class="form-box">
+    <div class="form-eyebrow">Create Account</div>
+    <h2>Start Free Trial</h2>
+    <div class="subtitle">Setup takes 10 minutes</div>
+    <div class="error" id="err"></div>
+
+    <div class="row">
+      <div class="field"><label>First Name</label><input type="text" id="fname" placeholder="Karim"/></div>
+      <div class="field"><label>Last Name</label><input type="text" id="lname" placeholder="Rahhal"/></div>
+    </div>
+    <div class="field"><label>Restaurant Name</label><input type="text" id="restaurant" placeholder="La Piazza Restaurant"/></div>
+    <div class="field"><label>Email</label><input type="email" id="email" placeholder="you@restaurant.com"/></div>
+    <div class="field"><label>WhatsApp Business Number</label><input type="text" id="phone" placeholder="+961 1 234 567"/></div>
+    <div class="row">
+      <div class="field"><label>Country</label>
+        <select id="country">
+          <option>Lebanon</option><option>UAE</option><option>Saudi Arabia</option>
+          <option>Jordan</option><option>Egypt</option><option>Kuwait</option>
+          <option>Qatar</option><option>Bahrain</option><option>Oman</option><option>Other</option>
+        </select>
+      </div>
+      <div class="field"><label>Password</label><input type="password" id="password" placeholder="Min 8 characters"/></div>
+    </div>
+
+    <button class="btn" id="signup-btn" onclick="doSignup()">Create Free Account</button>
+    <div class="footer-link">Already have an account? <a href="login.html">Sign In</a></div>
+  </div>
+</div>
+
+<script>
+async function doSignup() {
+  const btn = document.getElementById("signup-btn");
+  const err = document.getElementById("err");
+  err.classList.remove("show");
+  const fname = document.getElementById("fname").value.trim();
+  const lname = document.getElementById("lname").value.trim();
+  const restaurant = document.getElementById("restaurant").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const country = document.getElementById("country").value;
+  const password = document.getElementById("password").value;
+  if (!fname||!lname||!restaurant||!email||!password) { err.textContent="Please fill in all required fields."; err.classList.add("show"); return; }
+  if (password.length < 8) { err.textContent="Password must be at least 8 characters."; err.classList.add("show"); return; }
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Creating Account…';
+  try {
+    const res = await fetch("/api/auth/signup", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ name:`${fname} ${lname}`, restaurant, email, phone, country, password }) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Signup failed");
+    localStorage.setItem("tb_token", data.token);
+    localStorage.setItem("tb_user", JSON.stringify(data.user));
+    window.location.href = "dashboard.html";
+  } catch(e) {
+    err.textContent = e.message;
+    err.classList.add("show");
+    btn.disabled = false;
+    btn.innerHTML = "Create Free Account";
+  }
+}
+</script>
+</body>
+</html>

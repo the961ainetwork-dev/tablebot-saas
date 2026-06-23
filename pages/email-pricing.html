@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Email Service Pricing — TableBot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--paper:#fff;--ink:#0a0a0a;--grey-1:#e7e9ee;--grey-2:#c5cad4;--grey-3:#6b7280;--red:#ff0000;--sans:'Inter',Arial,sans-serif;--mono:'JetBrains Mono',monospace}
+    body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh}
+    a{color:inherit;text-decoration:none}
+    #topbar{height:64px;border-bottom:1px solid var(--ink);display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;background:var(--paper);z-index:40}
+    .nav-mark{font-weight:900;font-size:17px;letter-spacing:-.4px;text-transform:uppercase}
+    .nav-mark .dot{color:var(--red)}
+    .nav-top-links{display:flex;gap:28px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+    .nav-top-links a{color:var(--grey-3);transition:color .15s}
+    .nav-top-links a:hover,.nav-top-links a.active{color:var(--ink)}
+    .nav-cta{background:var(--ink);color:var(--paper);padding:9px 20px;font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;transition:all .15s;border:none;cursor:pointer}
+    .nav-cta:hover{background:var(--red)}
+
+    .hero{padding:72px 32px 56px;border-bottom:1px solid var(--ink);text-align:center}
+    .eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--red);margin-bottom:18px}
+    .hero h1{font-size:clamp(30px,4.6vw,52px);font-weight:900;text-transform:uppercase;letter-spacing:-1.8px;line-height:1.06;margin-bottom:14px}
+    .hero p{font-size:14.5px;color:var(--grey-3);max-width:540px;margin:0 auto;line-height:1.7}
+
+    #shell{max-width:1080px;margin:0 auto;padding:56px 32px}
+
+    /* Plan grid */
+    .plans-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--ink);border-left:1px solid var(--ink);margin-bottom:56px}
+    @media(max-width:900px){.plans-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:600px){.plans-grid{grid-template-columns:1fr}}
+    .plan{border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:28px 24px;display:flex;flex-direction:column;position:relative}
+    .plan.featured{background:var(--ink);color:var(--paper)}
+    .plan-badge{position:absolute;top:-1px;right:24px;background:var(--red);color:#fff;font-family:var(--mono);font-size:9px;padding:4px 10px;text-transform:uppercase;letter-spacing:1px}
+    .plan-tier{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--grey-3);margin-bottom:14px}
+    .plan.featured .plan-tier{color:var(--grey-2)}
+    .plan-price{font-size:40px;font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:4px}
+    .plan-price sub{font-size:14px;font-weight:400;letter-spacing:0;vertical-align:baseline}
+    .plan-trial{font-family:var(--mono);font-size:10px;color:var(--red);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+    .plan.featured .plan-trial{color:#ff6666}
+    .plan-contacts{font-size:12px;color:var(--grey-3);margin-bottom:18px;line-height:1.5}
+    .plan.featured .plan-contacts{color:var(--grey-2)}
+    .plan-divider{height:1px;background:var(--grey-2);margin:16px 0}
+    .plan.featured .plan-divider{background:#2a2a2a}
+    .plan-features{list-style:none;flex:1;display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
+    .plan-features li{font-size:12.5px;display:flex;gap:8px;align-items:baseline;line-height:1.45}
+    .plan-features li::before{content:"—";color:var(--red);font-weight:700;flex-shrink:0}
+    .plan.featured .plan-features li::before{color:#ff6666}
+    .plan-features .sub-item{font-family:var(--mono);font-size:10px;padding:3px 0 3px 16px;color:var(--grey-3);display:flex;align-items:baseline;gap:6px}
+    .plan.featured .plan-features .sub-item{color:var(--grey-2)}
+    .plan-features .sub-item::before{content:"·";color:var(--grey-3);font-weight:700;flex-shrink:0}
+    .plan-btn{padding:12px;text-align:center;font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;border:1px solid var(--ink);transition:all .15s;background:var(--paper);color:var(--ink);cursor:pointer}
+    .plan:not(.featured) .plan-btn:hover{background:var(--ink);color:var(--paper)}
+    .plan.featured .plan-btn{border-color:var(--paper);background:var(--paper);color:var(--ink)}
+    .plan.featured .plan-btn:hover{background:var(--red);border-color:var(--red);color:#fff}
+    .plan-custom{font-size:13px;color:var(--grey-3);line-height:1.6;margin-bottom:18px;flex:1}
+    .plan.featured .plan-custom{color:var(--grey-2)}
+
+    /* Broadcast pricing */
+    .broadcast-box{border:1px solid var(--ink);margin-bottom:56px}
+    .broadcast-box-head{background:var(--ink);color:var(--paper);padding:22px 28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    .broadcast-box-title{font-size:16px;font-weight:900;text-transform:uppercase;letter-spacing:-.3px}
+    .broadcast-box-sub{font-family:var(--mono);font-size:10px;color:var(--grey-2);text-transform:uppercase;letter-spacing:.5px}
+    .broadcast-box-body{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+    @media(max-width:600px){.broadcast-box-body{grid-template-columns:1fr}}
+    .bc-item{padding:22px 24px;border-right:1px solid var(--ink);border-top:1px solid var(--ink)}
+    .bc-item:last-child{border-right:none}
+    .bc-num{font-family:var(--mono);font-size:32px;font-weight:900;color:var(--red);margin-bottom:5px}
+    .bc-lbl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--grey-3);margin-bottom:7px}
+    .bc-desc{font-size:12px;color:var(--grey-3);line-height:1.55}
+
+    /* Feature comparison */
+    .compare-label{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--grey-3);margin-bottom:18px}
+    .compare-table{width:100%;border-collapse:collapse;border:1px solid var(--ink);margin-bottom:56px}
+    .compare-table th{text-align:left;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.8px;padding:11px 14px;background:var(--grey-1);color:var(--grey-3);border-bottom:1px solid var(--ink);border-right:1px solid var(--ink)}
+    .compare-table th:last-child{border-right:none}
+    .compare-table td{padding:11px 14px;border-bottom:1px solid var(--grey-1);border-right:1px solid var(--grey-1);font-size:12.5px;vertical-align:middle}
+    .compare-table td:last-child{border-right:none}
+    .compare-table td:first-child{font-weight:600}
+    .compare-table tr:last-child td{border-bottom:none}
+    .chk{color:var(--red);font-weight:700}.dash{color:var(--grey-2)}
+
+    /* Note */
+    .note-box{border:1px solid var(--ink);border-left:4px solid var(--red);padding:18px 22px;font-size:13px;color:var(--grey-3);line-height:1.7;margin-bottom:40px}
+    .note-box strong{color:var(--ink)}
+
+    /* CTA */
+    .cta-strip{background:var(--ink);color:var(--paper);text-align:center;padding:48px 32px}
+    .cta-strip h2{font-size:clamp(22px,3vw,36px);font-weight:900;text-transform:uppercase;letter-spacing:-1px;margin-bottom:14px}
+    .cta-strip p{font-size:13.5px;color:var(--grey-2);max-width:480px;margin:0 auto 28px;line-height:1.6}
+    .cta-btn{display:inline-block;padding:16px 36px;background:var(--red);color:#fff;font-family:var(--mono);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;transition:all .15s}
+    .cta-btn:hover{background:#fff;color:var(--ink)}
+
+    footer{padding:32px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px;border-top:1px solid var(--ink)}
+  </style>
+</head>
+<body>
+
+<div id="topbar">
+  <a href="../index.html"><div class="nav-mark">Table<span class="dot">·</span>Bot</div></a>
+  <div class="nav-top-links">
+    <a href="lists.html">Our Lists</a>
+    <a href="pricing.html">WhatsApp Pricing</a>
+    <a href="email-pricing.html" class="active">Email Pricing</a>
+    <a href="broadcast.html">Broadcast</a>
+  </div>
+  <a href="email-broadcast.html" class="nav-cta">Start Email Broadcast →</a>
+</div>
+
+<div class="hero">
+  <div class="eyebrow">Email Broadcast Service — Powered by SendGrid</div>
+  <h1>Email pricing.<br/>Transparent &amp; tiered.</h1>
+  <p>Use your own contact list or choose from our pre-segmented B2B and B2C house lists. Managed, reviewed, and sent by our team. Powered by SendGrid — part of the Twilio family.</p>
+</div>
+
+<div id="shell">
+
+  <!-- SENDGRID PLANS -->
+  <div class="compare-label" style="margin-bottom:22px">SendGrid Email Plans — Included with TableBot Email Service</div>
+  <div class="plans-grid">
+
+    <!-- Starter -->
+    <div class="plan">
+      <div class="plan-tier">Starter</div>
+      <div class="plan-price">$20<sub>/mo</sub></div>
+      <div class="plan-trial">Free for 60 days</div>
+      <div class="plan-contacts">Up to 100 contacts<br/>100 emails/day</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li>Design &amp; code editors</li>
+        <li>Segmentation</li>
+        <li>A/B testing &amp; actionable insights</li>
+        <li>Automation</li>
+        <li>Email testing credits
+          <span class="sub-item">3 credits</span>
+        </li>
+        <li>Signup forms
+          <span class="sub-item">1 form</span>
+        </li>
+        <li>Teammates
+          <span class="sub-item">1 additional</span>
+        </li>
+        <li>Support
+          <span class="sub-item">Ticket</span>
+        </li>
+      </ul>
+      <a href="email-broadcast.html" class="plan-btn">Get Started →</a>
+    </div>
+
+    <!-- Basic -->
+    <div class="plan featured">
+      <div class="plan-badge">Most Popular</div>
+      <div class="plan-tier">Basic</div>
+      <div class="plan-price">$25<sub>/mo</sub></div>
+      <div class="plan-trial">Start for free</div>
+      <div class="plan-contacts">Up to 100,000 contacts<br/>100,000 emails/month</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li>Design &amp; code editors</li>
+        <li>Segmentation</li>
+        <li>A/B testing &amp; actionable insights</li>
+        <li>Email testing credits
+          <span class="sub-item">10 credits</span>
+        </li>
+        <li>Signup forms
+          <span class="sub-item">5 forms</span>
+        </li>
+        <li>Teammates
+          <span class="sub-item">1 additional</span>
+        </li>
+        <li>Support
+          <span class="sub-item">Ticket, chat &amp; phone</span>
+        </li>
+      </ul>
+      <a href="email-broadcast.html" class="plan-btn">Get Started →</a>
+    </div>
+
+    <!-- Advanced -->
+    <div class="plan">
+      <div class="plan-tier">Advanced</div>
+      <div class="plan-price">$60<sub>/mo</sub></div>
+      <div class="plan-trial">Start for free</div>
+      <div class="plan-contacts">Up to 200,000 contacts<br/>700,000 emails/month</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li>Design &amp; code editors</li>
+        <li>Segmentation</li>
+        <li>A/B testing &amp; actionable insights</li>
+        <li>Automation</li>
+        <li>Dedicated IP access</li>
+        <li>Email testing credits
+          <span class="sub-item">60 credits</span>
+        </li>
+        <li>Signup forms
+          <span class="sub-item">15 forms</span>
+        </li>
+        <li>Teammates
+          <span class="sub-item">1,000 additional</span>
+        </li>
+        <li>Support
+          <span class="sub-item">Guaranteed response — ticket, chat &amp; phone</span>
+        </li>
+      </ul>
+      <a href="email-broadcast.html" class="plan-btn">Get Started →</a>
+    </div>
+
+    <!-- Custom -->
+    <div class="plan">
+      <div class="plan-tier">Custom</div>
+      <div class="plan-price" style="font-size:28px;letter-spacing:-1px">Custom<sub style="font-size:12px"> pricing</sub></div>
+      <div class="plan-trial" style="color:var(--grey-3)">Contact our team</div>
+      <div class="plan-contacts">Need to send more?<br/>Customize for exactly what you need.</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li>Design &amp; code editors</li>
+        <li>Segmentation</li>
+        <li>A/B testing &amp; actionable insights</li>
+        <li>Automation</li>
+        <li>Dedicated IP access</li>
+        <li>Email testing credits
+          <span class="sub-item">60 credits</span>
+        </li>
+        <li>Signup forms
+          <span class="sub-item">15 forms</span>
+        </li>
+        <li>Teammates
+          <span class="sub-item">1,000 additional</span>
+        </li>
+        <li>Support
+          <span class="sub-item">Guaranteed response — ticket, chat &amp; phone</span>
+        </li>
+      </ul>
+      <a href="about.html" class="plan-btn">Talk to Us →</a>
+    </div>
+
+  </div>
+
+  <!-- BROADCAST SERVICE PRICING -->
+  <div class="broadcast-box">
+    <div class="broadcast-box-head">
+      <div>
+        <div class="broadcast-box-title">Email Broadcast Service</div>
+        <div class="broadcast-box-sub">One-time per campaign — use your list or ours</div>
+      </div>
+      <a href="email-broadcast.html" style="padding:11px 22px;border:1px solid #fff;font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#fff">Start a Campaign →</a>
+    </div>
+    <div class="broadcast-box-body">
+      <div class="bc-item">
+        <div class="bc-num">$29</div>
+        <div class="bc-lbl">First Broadcast</div>
+        <div class="bc-desc">Flat rate for your first email campaign to any B2B or B2C list. Reviewed and sent by our team within 24 hours of approval.</div>
+      </div>
+      <div class="bc-item">
+        <div class="bc-num">-10%</div>
+        <div class="bc-lbl">Every Campaign After</div>
+        <div class="bc-desc">A 10% discount applies automatically to every subsequent email broadcast you submit.</div>
+      </div>
+      <div class="bc-item" style="border-right:none">
+        <div class="bc-num">$0</div>
+        <div class="bc-lbl">Until Approved</div>
+        <div class="bc-desc">Submit your order, we review the message and list. You pay only once approved — no charge for rejected orders.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div class="compare-label">Plan Comparison</div>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>Starter — $20</th>
+        <th>Basic — $25</th>
+        <th>Advanced — $60</th>
+        <th>Custom</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Contacts</td><td>100</td><td>100,000</td><td>200,000</td><td>Custom</td></tr>
+      <tr><td>Emails / Month</td><td>100/day</td><td>100,000</td><td>700,000</td><td>Custom</td></tr>
+      <tr><td>Design &amp; Code Editors</td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+      <tr><td>Segmentation</td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+      <tr><td>A/B Testing</td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+      <tr><td>Automation</td><td><span class="chk">✓</span></td><td><span class="dash">—</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+      <tr><td>Dedicated IP</td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+      <tr><td>Email Testing Credits</td><td>3</td><td>10</td><td>60</td><td>60</td></tr>
+      <tr><td>Signup Forms</td><td>1</td><td>5</td><td>15</td><td>15</td></tr>
+      <tr><td>Additional Teammates</td><td>1</td><td>1</td><td>1,000</td><td>1,000</td></tr>
+      <tr><td>Support</td><td>Ticket</td><td>Ticket, Chat, Phone</td><td>Guaranteed Response</td><td>Guaranteed Response</td></tr>
+      <tr><td>Free Trial</td><td>60 days</td><td><span class="chk">✓ Free start</span></td><td><span class="chk">✓ Free start</span></td><td>Contact us</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note-box">
+    <strong>One platform, three channels.</strong> Since SendGrid is part of the Twilio family — the same platform powering your WhatsApp and SMS/Voice channels — you manage everything from a single Twilio account. One bill, one API key ecosystem, one vendor relationship. Email adds to your existing Twilio setup with zero additional vendors to manage.
+  </div>
+
+  <div class="cta-strip">
+    <h2>Your first campaign is $29.</h2>
+    <p>Submit your message and list. Our team reviews, you approve, we send. Use our house lists or your own contacts.</p>
+    <a href="email-broadcast.html" class="cta-btn">Start an Email Campaign →</a>
+  </div>
+
+</div>
+
+<footer>Table·Bot — © 2026 — Email powered by SendGrid (Twilio)</footer>
+</body>
+</html>
