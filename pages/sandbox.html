@@ -9,7 +9,7 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
       --bg:#ffffff;--bg1:#ffffff;--bg2:#e7e9ee;--bg3:#dde0e8;--border:#0a0a0a;
-      --brand:#ff0000;--brand-glow:rgba(0,71,171,.08);
+      --brand:#ff0000;--brand-glow:rgba(204,0,0,.08);
       --t1:#0a0a0a;--t2:#6b7280;--t3:#a4a9b3;
       --sans:'Inter',Arial,sans-serif;--mono:'JetBrains Mono',monospace;
     }
@@ -21,7 +21,7 @@
     @keyframes spin{to{transform:rotate(360deg)}}
     @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
     @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(0,71,171,.4)}70%{box-shadow:0 0 0 7px rgba(0,71,171,0)}100%{box-shadow:0 0 0 0 rgba(0,71,171,0)}}
-    @keyframes urgentPulse{0%,100%{background:var(--brand)}50%{background:#003580}}
+    @keyframes urgentPulse{0%,100%{background:var(--brand)}50%{background:#990000}}
 
     #countdown-banner{background:var(--t1);color:var(--bg);padding:11px 24px;display:flex;align-items:center;justify-content:center;gap:16px;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:1px;flex-shrink:0;position:relative;z-index:60}
     #countdown-banner.urgent{animation:urgentPulse 1.5s infinite}
@@ -144,7 +144,7 @@
 
   <div id="sidenav">
     <div id="sidenav-logo">
-      <div class="logo"><span class="logo-text">Cart<span style="color:var(--brand)">·</span>Chat</span></div>
+      <div class="logo"><span class="logo-text">Table<span style="color:var(--brand)">·</span>Bot</span></div>
       <div class="plan"><span>Sandbox — Growth Trial</span></div>
     </div>
     <div id="nav-links">
@@ -204,7 +204,7 @@
             </div>
           </div>
           <div id="chat-input-bar">
-            <div id="chat-input-wrap"><textarea id="chat-textarea" rows="1" placeholder="Try it yourself — ask about an order…"></textarea></div>
+            <div id="chat-input-wrap"><textarea id="chat-textarea" rows="1" placeholder="Try it yourself — ask about a reservation, menu, or complaint…"></textarea></div>
             <button id="chat-send" onclick="sendChatMsg()" disabled>➤</button>
           </div>
         </div>
@@ -270,15 +270,15 @@ function toast(msg){ const el=document.getElementById("toast"); el.textContent=m
 document.getElementById("user-name").textContent = session.name || "Demo User";
 document.getElementById("user-email").textContent = session.email || "";
 document.getElementById("user-av").textContent = (session.name||"DU").split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
-document.getElementById("store-name").textContent = session.store || "Your Store";
+document.getElementById("store-name").textContent = session.restaurant||session.store || "Your Store";
 document.getElementById("welcome-name").textContent = (session.name||"there").split(" ")[0];
-document.getElementById("welcome-store").textContent = session.store || "your store";
+document.getElementById("welcome-store").textContent = session.restaurant||session.store || "your store";
 document.getElementById("welcome-goal").textContent = session.goal || "general AI automation";
 document.getElementById("welcome-plan").textContent = session.plan || "Growth";
 document.getElementById("ov-vol").textContent = (session.volume>=3000?"3,000+":Number(session.volume||0).toLocaleString());
 document.getElementById("ov-plan").textContent = session.plan || "Growth";
 document.getElementById("ov-goal-stat").textContent = (session.goal||"—").split(" ").slice(0,2).join(" ");
-document.getElementById("cfg-name").value = session.store || "";
+document.getElementById("cfg-name").value = session.restaurant||session.store || "";
 document.getElementById("cfg-platform").value = session.platform || "";
 document.getElementById("cfg-goal").value = session.goal || "";
 document.getElementById("cfg-team").value = session.team ? session.team + " staff" : "";
@@ -311,7 +311,7 @@ function switchPanel(name, btn) {
 }
 
 function buildSampleConvo() {
-  const store = session.store || "the store";
+  const store = session.restaurant||session.store || "the store";
   const goalMsgs = {
     "Reduce 'where is my order' tickets": [
       {role:"in", text:`Hey, where's my order #4471? It's been 3 days 😬`},
@@ -371,7 +371,7 @@ async function sendChatMsg() {
 
   const systemPrompt = `You are TableBot, the AI WhatsApp assistant for ${session.restaurant||"a restaurant"} (${session.cuisine||"restaurant"}).
 Primary goal: ${session.goal||"general assistance"}. Team size: ${session.team||"unknown"}.
-Guidelines: Be warm, concise (2-3 sentences), use emojis naturally, always offer to help with reservations, respond in the customer's language. This is a SANDBOX DEMO — showcase capability clearly.`;
+Guidelines: Be warm, concise (2-3 sentences), use emojis naturally, always offer to help with reservations. IMPORTANT: Respond in ENGLISH by default unless the customer messages you first in another language. This is a SANDBOX DEMO — showcase capability clearly.`;
 
   // Build history using explicit apiRole when present, otherwise infer from display role.
   // Also collapse consecutive same-role turns (API requires strict alternation) by merging text.
@@ -423,7 +423,7 @@ async function generateSample() {
   try {
     const res = await fetch("/api/chat", {
       method:"POST", headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({ model:"claude-sonnet-4-6", max_tokens:300, messages:[{role:"user", content:`Write one short, punchy Instagram caption (with emojis and 3 hashtags) for ${session.store||"an online store"} promoting: ${idea}. Just the caption, nothing else.`}] })
+      body: JSON.stringify({ model:"claude-sonnet-4-6", max_tokens:300, messages:[{role:"user", content:`Write one short, punchy Instagram caption (with emojis and 3 hashtags) for ${session.restaurant||session.store||"an online store"} promoting: ${idea}. Just the caption, nothing else.`}] })
     });
     const data = await res.json();
     out.textContent = data.content?.[0]?.text || "Could not generate — try again.";
