@@ -183,7 +183,7 @@
         <div class="cfg-card">
           <h3>👋 Welcome to your sandbox, <span id="welcome-name">there</span></h3>
           <p>Configured specifically for <span id="welcome-store">your store</span></p>
-          <p style="font-family:var(--sans);color:var(--t1);font-size:14px;line-height:1.7;margin-top:6px">This sandbox is pre-loaded with sample conversations and configured around the goal you selected: <strong id="welcome-goal">—</strong>. Head to <strong>Conversations</strong> to talk to your AI agent directly, or <strong>Social Campaigns</strong> to generate content. Everything here reflects the <strong id="welcome-plan">Growth</strong> plan.</p>
+          <p style="font-family:var(--sans);color:var(--t1);font-size:14px;line-height:1.7;margin-top:6px">This sandbox is configured around your selected goals: <strong id="welcome-goal">—</strong>. Head to <strong>Conversations</strong> to talk to your AI agent directly, or <strong>Social Campaigns</strong> to generate content. Everything here reflects the <strong id="welcome-plan">Growth</strong> plan.</p>
         </div>
       </div>
     </div>
@@ -311,22 +311,30 @@ function switchPanel(name, btn) {
 }
 
 function buildSampleConvo() {
-  const store = session.restaurant||session.store || "the store";
+  const restaurant = session.restaurant||session.store || "the restaurant";
   const goalMsgs = {
-    "Reduce 'where is my order' tickets": [
-      {role:"in", text:`Hey, where's my order #4471? It's been 3 days 😬`},
-      {role:"out", text:`Hi! 📦 Order #4471 shipped yesterday and is currently in transit, expected tomorrow by 6 PM at ${store}. Here's your tracking link. Anything else?`, ai:true},
+    "Reduce missed reservations": [
+      {role:"in", text:`Hi! Can I book a table for 4 on Friday at 7 PM? 🍽️`},
+      {role:"out", text:`Hi! 🎉 A table for 4 on Friday at 7 PM is confirmed at ${restaurant}! We'll send you a reminder on the morning of your booking. Is there anything else I can help with?`, ai:true},
     ],
-    "Recover abandoned carts": [
-      {role:"in", text:`I left some items in my cart but got distracted, can you help?`},
-      {role:"out", text:`Of course! I can see your cart has 2 items totaling $48.00. Want me to send you a direct checkout link? I can also apply a 10% welcome discount 🎁`, ai:true},
+    "Answer menu questions faster": [
+      {role:"in", text:`Hey, do you have any vegetarian options? And what's today's special? 🌿`},
+      {role:"out", text:`Great question! ✨ We have 8 vegetarian dishes on our menu. Today's special is Truffle Mushroom Pasta — $22, available until 10 PM. Want me to send you the full menu?`, ai:true},
     ],
-    "Help customers find products": [
-      {role:"in", text:`Do you have the rose serum in stock?`},
-      {role:"out", text:`Yes! ✨ Rose Glow Face Serum — $28.00, 30ml, in stock at ${store}. Free shipping over $50. Want me to add it to a new order?`, ai:true},
+    "Handle complaints better": [
+      {role:"in", text:`Our table waited 40 minutes and the food came cold. Very disappointed 😡`},
+      {role:"out", text:`I'm so sorry to hear this — that's absolutely not the experience we want for you. 🙏 I'm flagging this to our manager right now. We'd love to make it up to you with a complimentary visit. Can I confirm your email?`, ai:true},
+    ],
+    "Grow social media presence": [
+      {role:"in", text:`Can you write an Instagram post for our new summer menu launch?`},
+      {role:"out", text:`Of course! ☀️ Here's a post for your summer launch:\n\n"Summer has arrived at ${restaurant}! 🌊🍋 Our new seasonal menu is here — fresh flavors, local ingredients, and the same warm atmosphere you love. Book your table now — link in bio!" 🍽️\n\n#SummerMenu #${restaurant.replace(/\s/g,'')} #BeirutFood`, ai:true},
+    ],
+    "Reduce staff workload": [
+      {role:"in", text:`What are your opening hours and do you take walk-ins?`},
+      {role:"out", text:`We're open daily 12 PM – 11 PM 🕐 We do take walk-ins, but Friday and Saturday evenings fill up fast! I'd recommend booking ahead — want me to reserve a table for you right now?`, ai:true},
     ],
   };
-  return goalMsgs[session.goal] || goalMsgs["Reduce 'where is my order' tickets"];
+  return goalMsgs[session.goal] || goalMsgs["Reduce missed reservations"];
 }
 
 const sampleConvo = buildSampleConvo();
@@ -433,7 +441,7 @@ async function generateSample() {
 const tourSteps = [
   { title:"Welcome to your sandbox", body:"This is a fully working AI agent, configured around your store's details. You have 24 hours to explore every feature before this expires.", target:null },
   { title:"Overview — your control center", body:"See your configured message volume, selected plan, and primary goal at a glance. This is what your dashboard looks like once live.", target:"overview" },
-  { title:"Conversations — talk to your AI", body:"This is the core of TableBot. A sample conversation is pre-loaded around your goal. Type a message yourself and watch Claude respond as your store's AI agent.", target:"conversations" },
+  { title:"Conversations — talk to your AI", body:"This is the core of TableBot. A sample conversation is pre-loaded around your goal. Type a message yourself and watch Claude respond as your restaurant's AI agent.", target:"conversations" },
   { title:"Social Campaigns — generate content", body:"Try generating a real Instagram caption for a promotion. This is included in your Growth plan trial.", target:"social" },
   { title:"AI Agent Config — your data", body:"This is the information you gave us, already configured. Once you activate, you'll be able to edit your full catalog, policies, and shipping rules here.", target:"config" },
 ];
